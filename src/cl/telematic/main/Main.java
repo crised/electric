@@ -1,49 +1,35 @@
 package cl.telematic.main;
 
-import net.wimpi.modbus.Modbus;
-import net.wimpi.modbus.io.ModbusTCPTransaction;
-import net.wimpi.modbus.msg.*;
-import net.wimpi.modbus.net.*;
-import net.wimpi.modbus.procimg.*;
-import java.net.InetAddress;
+import cl.telematic.comm.Communication;
+import cl.telematic.data.Json;
+import cl.telematic.data.Parameter;
 
 
 public class Main {
 
     public static void main(String[] args) {
 
-        TCPMasterConnection con = null; // the connection
-        ModbusTCPTransaction trans = null;
-        ReadMultipleRegistersRequest req = null;
-        ReadMultipleRegistersResponse res = null;
+        while(true){
 
-        int port = 502; // Modbus.DEFAULT_PORT 502
-        int ref = 1; //
-        int count = 1; // Number of Discrete Input to read
+            try{
+                Thread.sleep(5000);
+            }catch(Exception e){
+                System.out.println("Thread Error");
+            }
 
-        try {
+            Communication comm = new Communication();
 
-            InetAddress addr = InetAddress.getByName("crised.noip.me");
-            con = new TCPMasterConnection(addr);
-            con.setPort(port);
-            con.setTimeout(10000);
-            con.connect();
-            req = new ReadMultipleRegistersRequest(ref, count);
-            req.setUnitID(1);
-            trans = new ModbusTCPTransaction(con);
-            trans.setRequest(req);
-            trans.execute();
-            res = (ReadMultipleRegistersResponse) trans.getResponse();
-            System.out.println("Voltage is: " + res.getRegister(0).getValue());
-            con.close();
+            for(Parameter par : Parameter.values()){
+                Integer valueFromResponse = comm.readValues(par.getRegNumber());
 
-
-        } catch (Exception e) {
-            System.out.println("error");
-            System.out.println(e.getMessage());
+                par.setValue1(valueFromResponse);
+            }
+            Json  json = new Json();
+            json.updateJson();
+            System.out.println("Good!");
 
         }
 
-        System.out.println("Good!");
+
     }
 }
