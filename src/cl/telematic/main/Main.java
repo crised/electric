@@ -9,18 +9,21 @@ public class Main {
 
     public static void main(String[] args) {
 
+        int interval = 5000;
+        int errorInterval = 4000;
+
+
         while(true){
 
-            try{
-                Thread.sleep(5000);
-            }catch(Exception e){
-                System.out.println("Thread Error");
-            }
+            Sleep.sleep(interval);
+
+
 
             Communication comm = new Communication();
 
             for(Parameter par : Parameter.values()){
                 Integer valueFromResponse = comm.readValues(par.getRegNumber());
+
 
                 par.setValue1(valueFromResponse);
             }
@@ -29,6 +32,7 @@ public class Main {
             System.out.println("Good!");
 
         }
+
 
 
     }
