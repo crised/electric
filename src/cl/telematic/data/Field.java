@@ -11,7 +11,7 @@ public class Field {
     private final Integer regNumber;
     private Integer value1;
     private Integer value2;
-    private Date timeStamp;
+    private String timeStamp;
 
     public Field(String name, Integer regNumber) {
         this.name = name;
@@ -43,11 +43,9 @@ public class Field {
         this.value2 = value2;
     }
 
-    public Date getTimeStamp() {
-        return timeStamp;
-    }
+    public String getTimeStamp() { return timeStamp;}
 
-    public void setTimeStamp(Date timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setTimeStamp(String timeStamp) {
+       this.timeStamp = timeStamp;
     }
 }

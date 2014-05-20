@@ -6,9 +6,9 @@ import java.util.List;
 /**
  * Created by crised on 5/20/14.
  */
-public class Factory {
+public final class Factory {
 
-    static final List<Field> fields = new ArrayList<Field>();;
+    static public final List<Field> fields = new ArrayList<Field>();;
 
     public Factory() {
 
@@ -38,7 +38,4 @@ public class Factory {
 
     }
 
-    public static List<Field> getFields() {
-        return fields;
-    }
 }
