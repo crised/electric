@@ -4,6 +4,7 @@ import cl.telematic.comm.Communication;
 import cl.telematic.data.Factory;
 import cl.telematic.data.Field;
 import cl.telematic.data.Json;
+import cl.telematic.server.Server;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -39,6 +40,9 @@ public class Main {
         } catch (Exception ex) {
             System.out.println("logger");
         }
+
+        Server server = new Server();
+        server.start();
 
     while(true)
 

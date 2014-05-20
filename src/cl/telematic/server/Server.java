@@ -21,7 +21,13 @@ public class Server extends Verticle {
                     System.out.println(entry.getKey() + ":" + entry.getValue());
                 }
                 req.response().headers().set("Content-Type", "text/json; charset=UTF-8");
-                if(Json.jsonString!=null) req.response().end(Json.jsonString);
+                if(Json.jsonString==null) {
+                    req.response().end("");
+                } else
+                {
+                    req.response().end(Json.jsonString);
+
+                }
             }
         }).listen(8080);
     }
