@@ -27,8 +27,8 @@ public class Json {
 
         try {
 
-            for (Parameter par : Parameter.values()) {
-                mapper.writerWithDefaultPrettyPrinter().writeValueAsString(par);
+            for (Field field : Factory.getFields()) {
+                mapper.writerWithDefaultPrettyPrinter().writeValueAsString(field);
             }
             File file = new File("/home/crised/IdeaProjects/slave/parameter.json");
             mapper.write
@@ -48,13 +48,6 @@ public class Json {
                             mapper.writeValue(file, Parameter.values());
 
             }*/
-
-    private Object[] getValues() {
-
-        Object[] bar = Parameter.values();
-        return bar;
-
-    }
 
 
 }

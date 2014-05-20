@@ -1,10 +1,13 @@
 package cl.telematic.main;
 
 import cl.telematic.comm.Communication;
+import cl.telematic.data.Factory;
+import cl.telematic.data.Field;
 import cl.telematic.data.Json;
 import cl.telematic.data.Parameter;
 
 import java.util.Date;
+import java.util.List;
 import java.util.logging.*;
 
 public class Main {
@@ -37,17 +40,17 @@ public class Main {
 
             Sleep.sleep(interval);
 
-            for (Parameter par : Parameter.values()) {
-                Integer valueFromResponse = comm.readValues(par.getRegNumber());
+            for (Field field : Factory.getFields()) {
+                Integer valueFromResponse = comm.readValues(field.getRegNumber());
                 Sleep.sleep(betweenRegisters);
                 //one more try
                 if (valueFromResponse == null) {
                     log.log(Level.FINE, "Got null :(");
                     Sleep.sleep(errorInterval);
-                    valueFromResponse = comm.readValues(par.getRegNumber());
+                    valueFromResponse = comm.readValues(field.getRegNumber());
                 }
-                par.setValue1(valueFromResponse);
-                par.setTimeStamp(new Date());
+                field.setValue1(valueFromResponse);
+                field.setTimeStamp(new Date());
                 json.updateJson();
 
             }
