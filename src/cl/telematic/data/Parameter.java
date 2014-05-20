@@ -1,6 +1,6 @@
 package cl.telematic.data;
 
-import java.util.Vector;
+import java.util.Date;
 
 /**
  * Created by crised on 5/15/14.
@@ -9,7 +9,7 @@ public enum Parameter {
 
     VOLTAGE1("Voltaje FN 1", 1), VOLTAGE2("Voltaje FN 2", 3),
     VOLTAGE3("Voltaje FN  3", 5), VOLTAGEL12("Voltaje FF 1-2", 7),
-    VOLTAGEL23("Voltaje FF 2-3", 9), VOLTAGEL31("Voltage FF 3-1", 9),
+    VOLTAGEL23("Voltaje FF 2-3", 9), VOLTAGEL31("Voltaje FF 3-1", 9),
     CURRENT1("Corriente 1", 13), CURRENT2("Corriente 2", 15),
     CURRENT3("Corriente 3", 17), ACTIVEPOWER1("Potencia Activa 1", 19),
     ACTIVEPOWER2("Potencia Activa 2", 21), ACTIVEPOWER3("Potencia Activa 3", 23),
@@ -23,6 +23,7 @@ public enum Parameter {
     private Integer regNumber;
     private Integer value1;
     private Integer value2;
+    private Date timeStamp;
     //Se toma solo la aprox del Valor (1 registro)
 
 
@@ -31,6 +32,7 @@ public enum Parameter {
         this.regNumber = regNumber;
         this.value1 = null;
         this.value2 = null;
+        this.timeStamp = null;
 
     }
 
@@ -56,5 +58,13 @@ public enum Parameter {
 
     public void setValue2(Integer value2) {
         this.value2 = value2;
+    }
+
+    public Date getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(Date timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }

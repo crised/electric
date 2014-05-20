@@ -1,40 +1,58 @@
 package cl.telematic.data;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by crised on 5/15/14.
  */
 public class Json {
 
+    private static final Logger log = Logger.getLogger(Json.class.getName());
+    private ObjectMapper mapper;
+
+    public Json() {
+
+        mapper = new ObjectMapper();
+        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+    }
 
     public void updateJson() {
-
-        ObjectMapper mapper = new ObjectMapper();
 
 
         try {
 
-            File file = new File("/home/crised/IdeaProjects/slave/parameter.json");
-            Map<String,Integer> parameters = new HashMap<String, Integer>();
-            for(Parameter par : Parameter.values()){
-                parameters.put(par.getName(),par.getValue1());
+            for (Parameter par : Parameter.values()) {
+                mapper.writerWithDefaultPrettyPrinter().writeValueAsString(par);
             }
-            mapper.writeValue(file, parameters);
+            File file = new File("/home/crised/IdeaProjects/slave/parameter.json");
+            mapper.write
 
 
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (Exception ex) {
+            log.log(Level.SEVERE, ex.toString(), ex);
+            log.log(Level.FINE, "comm error");
         }
 
-        System.out.println("Json...");
+
+    }
+
+    /*Map<String, Integer> parameters = new LinkedHashMap<String, Integer>();
+            for (Parameter par : Parameter.values()) {
+                parameters.put(par.getName(), par.getValue1());
+                            mapper.writeValue(file, Parameter.values());
+
+            }*/
+
+    private Object[] getValues() {
+
+        Object[] bar = Parameter.values();
+        return bar;
 
     }
 

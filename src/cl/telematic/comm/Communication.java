@@ -7,18 +7,23 @@ import net.wimpi.modbus.msg.ReadMultipleRegistersResponse;
 import net.wimpi.modbus.net.TCPMasterConnection;
 
 import java.net.InetAddress;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Communication {
 
-    TCPMasterConnection con; // the connection
-    ModbusTCPTransaction trans;
-    ReadMultipleRegistersRequest req;
-    ReadMultipleRegistersResponse res;
+    private static final Logger log = Logger.getLogger(Communication.class.getName());
 
-    int port = Modbus.DEFAULT_PORT; // 502
-    int timeOut = 10000;
-    int numberOfRegisters = 1; // Approximate 16 bit values
-    int unitAdress = 1;
+
+    private TCPMasterConnection con; // the connection
+    private ModbusTCPTransaction trans;
+    private ReadMultipleRegistersRequest req;
+    private ReadMultipleRegistersResponse res;
+
+    private int port = Modbus.DEFAULT_PORT; // 502
+    private int timeOut = 10000;
+    private int numberOfRegisters = 1; // Approximate 16 bit values
+    private int unitAdress = 1;
 
     public Integer readValues(Integer startReg) {
 
@@ -28,12 +33,12 @@ public class Communication {
             setReq(startReg);
             setTrans(); // Se hara una transaccion nueva para cada parametro
             res = (ReadMultipleRegistersResponse) trans.getResponse();
-            killConnection();
             return res.getRegister(0).getValue();
 
-        } catch (Exception e) {
-            System.out.println("error");
-            System.out.println(e.getMessage());
+        } catch (Exception ex) {
+            log.log(Level.SEVERE, ex.toString(), ex);
+            log.log(Level.FINE, "comm error");
+
 
         }
 
@@ -51,7 +56,8 @@ public class Communication {
             con.setTimeout(timeOut);
             con.connect();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            con = null;
+            log.log(Level.INFO, "Imposible establecer conexion");
         }
     }
 
@@ -62,22 +68,20 @@ public class Communication {
 
     }
 
-    private void setTrans() throws Exception {
-        trans = new ModbusTCPTransaction(con);
-        trans.setRequest(req);
-        trans.execute();
+    private void setTrans() {
+
+        try {
+            trans = new ModbusTCPTransaction(con);
+            trans.setRequest(req);
+            trans.execute();
+        } catch (Throwable tr) {
+            log.log(Level.INFO, tr.toString(), "Fallo la trans");
+
+        }
     }
 
 
-    public void killConnection() {
 
-        if (con != null) con.close();
-        con = null;
-        req = null;
-        trans = null;
-
-
-    }
 
 
 }

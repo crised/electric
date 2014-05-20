@@ -4,36 +4,53 @@ import cl.telematic.comm.Communication;
 import cl.telematic.data.Json;
 import cl.telematic.data.Parameter;
 
+import java.util.Date;
+import java.util.logging.*;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        int interval = 5000;
-        int errorInterval = 4000;
+        int interval = 0;
+        int betweenRegisters = 0;
+        int errorInterval = 5000;
 
 
-        while(true){
+        Communication comm = new Communication();
+        Json json = new Json();
 
-            Sleep.sleep(interval);
-
-
-
-            Communication comm = new Communication();
-
-            for(Parameter par : Parameter.values()){
-                Integer valueFromResponse = comm.readValues(par.getRegNumber());
-
-
-                par.setValue1(valueFromResponse);
-            }
-            Json  json = new Json();
-            json.updateJson();
-            System.out.println("Good!");
-
+        final Logger log = Logger.getLogger(Main.class.getName());
+        try {
+            Handler fh = new FileHandler("/home/crised/IdeaProjects/slave/log.txt");
+            log.addHandler(fh);
+            SimpleFormatter formatter = new SimpleFormatter();
+            fh.setFormatter(formatter);
+            // Request that every detail gets logged.
+            log.setLevel(Level.ALL);
+            // Log a simple INFO message.
+        } catch (Exception ex) {
+            System.out.println("logger");
         }
 
 
+        while (true) {
 
+            Sleep.sleep(interval);
+
+            for (Parameter par : Parameter.values()) {
+                Integer valueFromResponse = comm.readValues(par.getRegNumber());
+                Sleep.sleep(betweenRegisters);
+                //one more try
+                if (valueFromResponse == null) {
+                    log.log(Level.FINE, "Got null :(");
+                    Sleep.sleep(errorInterval);
+                    valueFromResponse = comm.readValues(par.getRegNumber());
+                }
+                par.setValue1(valueFromResponse);
+                par.setTimeStamp(new Date());
+                json.updateJson();
+
+            }
+        }
     }
 }
