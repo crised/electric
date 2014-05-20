@@ -4,15 +4,20 @@ import cl.telematic.comm.Communication;
 import cl.telematic.data.Factory;
 import cl.telematic.data.Field;
 import cl.telematic.data.Json;
-import cl.telematic.data.Parameter;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws  Exception{
 
         int interval = 0;
         int betweenRegisters = 0;
@@ -35,25 +40,28 @@ public class Main {
             System.out.println("logger");
         }
 
+    while(true)
 
-        while (true) {
+    {
 
-            Sleep.sleep(interval);
+        Sleep.sleep(interval);
 
-            for (Field field : Factory.getFields()) {
-                Integer valueFromResponse = comm.readValues(field.getRegNumber());
-                Sleep.sleep(betweenRegisters);
-                //one more try
-                if (valueFromResponse == null) {
-                    log.log(Level.FINE, "Got null :(");
-                    Sleep.sleep(errorInterval);
-                    valueFromResponse = comm.readValues(field.getRegNumber());
-                }
-                field.setValue1(valueFromResponse);
-                field.setTimeStamp(new Date());
-                json.updateJson();
-
+        for (Field field : Factory.getFields()) {
+            Integer valueFromResponse = comm.readValues(field.getRegNumber());
+            Sleep.sleep(betweenRegisters);
+            //one more try
+            if (valueFromResponse == null) {
+                log.log(Level.FINE, "Got null :(");
+                Sleep.sleep(errorInterval);
+                valueFromResponse = comm.readValues(field.getRegNumber());
             }
+            field.setValue1(valueFromResponse);
+            field.setTimeStamp(new Date());
+            json.updateJson();
+
         }
     }
+}
+
+
 }

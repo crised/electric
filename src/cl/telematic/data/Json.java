@@ -1,10 +1,9 @@
 package cl.telematic.data;
 
+import com.sun.org.apache.bcel.internal.generic.FADD;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
+import org.codehaus.jackson.map.ObjectWriter;
 
-import java.io.File;
-import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,41 +12,25 @@ import java.util.logging.Logger;
  */
 public class Json {
 
+    public static String jsonString;
     private static final Logger log = Logger.getLogger(Json.class.getName());
-    private ObjectMapper mapper;
+    private ObjectWriter writter;
+
 
     public Json() {
 
-        mapper = new ObjectMapper();
-        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+        writter = new ObjectMapper().writer();
     }
 
     public void updateJson() {
 
-
         try {
 
-            for (Field field : Factory.getFields()) {
-                mapper.writerWithDefaultPrettyPrinter().writeValueAsString(field);
-            }
-            File file = new File("/home/crised/IdeaProjects/slave/parameter.json");
-            mapper.write
+            jsonString = writter.writeValueAsString(Factory.fields);
 
 
         } catch (Exception ex) {
             log.log(Level.SEVERE, ex.toString(), ex);
-            log.log(Level.FINE, "comm error");
         }
-
-
     }
-
-    /*Map<String, Integer> parameters = new LinkedHashMap<String, Integer>();
-            for (Parameter par : Parameter.values()) {
-                parameters.put(par.getName(), par.getValue1());
-                            mapper.writeValue(file, Parameter.values());
-
-            }*/
-
-
 }
